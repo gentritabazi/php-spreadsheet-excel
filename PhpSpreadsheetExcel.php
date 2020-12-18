@@ -2,10 +2,10 @@
 
 namespace Infrastructure\Services;
 
-use PhpOffice\PhpSpreadsheet\Writer\Csv as CsvWriter;
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
 use PhpOffice\PhpSpreadsheet\Style\Alignment;
+use PhpOffice\PhpSpreadsheet\Writer\Csv as CsvWriter;
 use Symfony\Component\HttpFoundation\StreamedResponse;
 
 class PhpSpreadsheetExcel
@@ -40,6 +40,12 @@ class PhpSpreadsheetExcel
         // No.
         if (!isset($this->config['disable_no'])) {
             $this->sheet->setCellValue('A'. $startFromColumn, 'No');
+
+            // Style
+            if (isset($this->config['column_style'])) {
+                $this->sheet->getStyle('A'. $startFromColumn)->applyFromArray($this->config['column_style']);
+            }
+
             $columnInsideColumns = 'B';
         } else {
             $columnInsideColumns = 'A';
@@ -53,12 +59,17 @@ class PhpSpreadsheetExcel
                 $this->sheet->setCellValue($columnInsideColumns. $startFromColumn, $this->columns[$i]);
             }
 
+            // Style
+            if (isset($this->config['column_style'])) {
+                $this->sheet->getStyle($columnInsideColumns. $startFromColumn)->applyFromArray($this->config['column_style']);
+            }
+
             // Autosize
             if (isset($this->config['autosize']) && !is_array($this->columns[$i])) {
                 $this->sheet->getColumnDimension($columnInsideColumns)->setAutoSize(true);
             }
 
-            // Settingss
+            // Settings
             if (is_array($this->columns[$i])) {
                 if (isset($this->columns[$i]['width'])) {
                     $this->sheet->getColumnDimension($columnInsideColumns)->setWidth($this->columns[$i]['width']);
@@ -87,7 +98,7 @@ class PhpSpreadsheetExcel
             $rendNo++;
         }
 
-        if (isset($this->config['set_borders'])) {
+        if (isset($this->config['set_borders']) && $this->config['set_borders'] == true) {
             $this->sheet->getStyle(str_ireplace('A1', 'A3', $this->sheet->calculateWorksheetDimension()))->getBorders()->applyFromArray([
             'allBorders' => [
                     'borderStyle' => \PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN
@@ -100,6 +111,8 @@ class PhpSpreadsheetExcel
 
     public function stream()
     {
+        $this->build();
+
         $writer = new Xlsx($this->spreadsheet);
         $headers = [
             'Cache-Control' => 'must-revalidate, post-check=0, pre-check=0',
@@ -124,6 +137,8 @@ class PhpSpreadsheetExcel
 
     public function streamAsCsv()
     {
+        $this->build();
+
         $writer = new CsvWriter($this->spreadsheet);
 
         $headers = [
@@ -149,6 +164,8 @@ class PhpSpreadsheetExcel
 
     public function save($path)
     {
+        $this->build();
+        
         $writer = new Xlsx($this->spreadsheet);
         $writer->save($path);
 
