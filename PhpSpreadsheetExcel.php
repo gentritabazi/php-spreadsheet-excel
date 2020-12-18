@@ -79,6 +79,11 @@ class PhpSpreadsheetExcel
             $columnInsideColumns++;
         }
 
+        // Auto Filter
+        if (isset($this->config['columns_auto_filter']) && $this->config['columns_auto_filter']) {
+            $this->sheet->setAutoFilter('A'. $startFromColumn. ':'. $this->convertNumberToLetter(count($this->columns) + 1). $startFromColumn);
+        }
+
         // Rows
         $startFromColumn += 1;
         $rendNo = 1;
@@ -170,5 +175,18 @@ class PhpSpreadsheetExcel
         $writer->save($path);
 
         return true;
+    }
+
+    private function convertNumberToLetter($number)
+    {
+        $startFrom = 'A';
+
+        for ($i = 0; $i < $number; $i++) {
+            if ($i == ($number - 1)) {
+                return $startFrom;
+            }
+
+            $startFrom++;
+        }
     }
 }
