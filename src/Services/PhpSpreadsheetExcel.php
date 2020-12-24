@@ -1,6 +1,6 @@
 <?php
 
-namespace Infrastructure\Services;
+namespace GentritAbazi\PhpSpreadsheetExcel;
 
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
