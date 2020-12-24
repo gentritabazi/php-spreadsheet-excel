@@ -26,4 +26,5 @@ $spreadsheetExcel->save('file.xlsx');
 ```
 
 Output:
+
 ![...](screenshots/example-01.png)
