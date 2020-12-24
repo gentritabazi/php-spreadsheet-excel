@@ -1,0 +1,6 @@
+{
+  "require": {
+    "gentritabazi01/phpspreadsheetexcel": "dev-master",
+    "symfony/http-foundation": "^5.2"
+  }
+}
