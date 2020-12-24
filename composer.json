@@ -1,0 +1,22 @@
+{
+    "name": "gentritabazi01/phpspreadsheetexcel",
+    "description": "Laravel Google Sheets",
+    "homepage": "https://github.com/gentritabazi01/PhpSpreadsheetExcel",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Gentrit Abazi",
+            "email": "gentritabazi01@gmail.com"
+        }
+    ],
+    "autoload": {
+        "psr-4": {
+            "GentritAbazi\\PhpSpreadsheetExcel\\": "src/"
+        }
+    },
+    "require": {
+        "phpoffice/phpspreadsheet": "^1.0"
+    },
+    "minimum-stability": "dev",
+    "prefer-stable": true
+}
