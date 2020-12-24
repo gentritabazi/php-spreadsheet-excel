@@ -1,6 +1,6 @@
 <?php
 
-namespace GentritAbazi\PhpSpreadsheetExcel;
+namespace GentritAbazi\PhpSpreadsheetExcel\Services;
 
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
@@ -8,7 +8,7 @@ use PhpOffice\PhpSpreadsheet\Style\Alignment;
 use PhpOffice\PhpSpreadsheet\Writer\Csv as CsvWriter;
 use Symfony\Component\HttpFoundation\StreamedResponse;
 
-class PhpSpreadsheetExcel
+class PhpSpreadsheetExcelService
 {
     private $columns;
     private $rows;
