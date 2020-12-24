@@ -33,7 +33,7 @@ class PhpSpreadsheetExcelService
         if (isset($this->config['title'])) {
             $this->sheet->setCellValue('A1', $this->config['title'])->getStyle('A1')->getFont()->setBold(true);
             $this->sheet->getStyle('A1')->getAlignment()->setHorizontal(Alignment::HORIZONTAL_CENTER);
-            $this->sheet->mergeCells('A1:'. excelPartNrToLetter(count($this->columns) + 1). '1');
+            $this->sheet->mergeCells('A1:'. $this->convertNumberToLetter(count($this->columns) + 1). '1');
             $startFromColumn += 2;
         }
 
@@ -106,7 +106,12 @@ class PhpSpreadsheetExcelService
 
         // Worksheet Settings
         if (isset($this->config['borders']) && $this->config['borders'] == true) {
-            $this->sheet->getStyle(str_ireplace('A1', 'A3', $this->sheet->calculateWorksheetDimension()))->getBorders()->applyFromArray([
+            $worksheetDimension = $this->sheet->calculateWorksheetDimension();
+            if (isset($this->config['title'])) {
+                $worksheetDimension = str_ireplace('A1', 'A3', $worksheetDimension);
+            }
+            
+            $this->sheet->getStyle($worksheetDimension)->getBorders()->applyFromArray([
                 'allBorders' => [
                     'borderStyle' => \PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN
                 ]
