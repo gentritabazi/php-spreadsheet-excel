@@ -3,7 +3,7 @@
 namespace GentritAbazi\PhpSpreadsheetExcel\Services;
 
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
-use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
+use PhpOffice\PhpSpreadsheet\Writer\Xlsx as XlsxWriter;
 use PhpOffice\PhpSpreadsheet\Style\Alignment;
 use PhpOffice\PhpSpreadsheet\Writer\Csv as CsvWriter;
 use Symfony\Component\HttpFoundation\StreamedResponse;
@@ -118,7 +118,7 @@ class PhpSpreadsheetExcelService
     {
         $this->build();
 
-        $writer = new Xlsx($this->spreadsheet);
+        $writer = new XlsxWriter($this->spreadsheet);
         $headers = [
             'Cache-Control' => 'must-revalidate, post-check=0, pre-check=0',
             'Content-type' => 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
@@ -171,7 +171,7 @@ class PhpSpreadsheetExcelService
     {
         $this->build();
         
-        $writer = new Xlsx($this->spreadsheet);
+        $writer = new XlsxWriter($this->spreadsheet);
         $writer->save($path);
 
         return true;
