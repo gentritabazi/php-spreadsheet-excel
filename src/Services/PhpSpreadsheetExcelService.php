@@ -39,7 +39,7 @@ class PhpSpreadsheetExcelService
 
         // Auto Numbering
         if (isset($this->config['auto_numbering']) && $this->config['auto_numbering'] == true) {
-            $this->sheet->setCellValue('A'. $startFromColumn, 'No');
+            $this->sheet->setCellValue('A'. $startFromColumn, 'No.');
 
             // Style Columns
             if (isset($this->config['columns_style'])) {
