@@ -37,12 +37,12 @@ class PhpSpreadsheetExcelService
             $startFromColumn += 2;
         }
 
-        // No.
-        if (!isset($this->config['disable_no'])) {
+        // Auto Numbering
+        if (isset($this->config['auto_numbering']) && $this->config['auto_numbering'] == true) {
             $this->sheet->setCellValue('A'. $startFromColumn, 'No');
 
-            // Style
-            if (isset($this->config['column_style'])) {
+            // Style Columns
+            if (isset($this->config['columns_style'])) {
                 $this->sheet->getStyle('A'. $startFromColumn)->applyFromArray($this->config['column_style']);
             }
 
@@ -53,23 +53,24 @@ class PhpSpreadsheetExcelService
 
         // Columns
         for ($i = 0; $i < count($this->columns); $i++) {
+            // Column Value
             if (is_array($this->columns[$i])) {
                 $this->sheet->setCellValue($columnInsideColumns. $startFromColumn, $this->columns[$i]['value']);
             } else {
                 $this->sheet->setCellValue($columnInsideColumns. $startFromColumn, $this->columns[$i]);
             }
 
-            // Style
-            if (isset($this->config['column_style'])) {
+            // Style Columns
+            if (isset($this->config['columns_style'])) {
                 $this->sheet->getStyle($columnInsideColumns. $startFromColumn)->applyFromArray($this->config['column_style']);
             }
 
-            // Autosize
-            if (isset($this->config['autosize']) && !is_array($this->columns[$i])) {
+            // Autosize Columns
+            if (isset($this->config['columns_autosize']) && !is_array($this->columns[$i])) {
                 $this->sheet->getColumnDimension($columnInsideColumns)->setAutoSize(true);
             }
 
-            // Settings
+            // Column Settings
             if (is_array($this->columns[$i])) {
                 if (isset($this->columns[$i]['width'])) {
                     $this->sheet->getColumnDimension($columnInsideColumns)->setWidth($this->columns[$i]['width']);
@@ -79,18 +80,18 @@ class PhpSpreadsheetExcelService
             $columnInsideColumns++;
         }
 
-        // Auto Filter
+        // Auto Filter Columns
         if (isset($this->config['columns_auto_filter']) && $this->config['columns_auto_filter']) {
             $this->sheet->setAutoFilter('A'. $startFromColumn. ':'. $this->convertNumberToLetter(count($this->columns) + 1). $startFromColumn);
         }
 
         // Rows
         $startFromColumn += 1;
-        $rendNo = 1;
+        $autoNumbering = 1;
         foreach ($this->rows as $row) {
             $columnInsideRows = 'A';
-            if (!isset($this->config['disable_no'])) {
-                $this->sheet->setCellValue("$columnInsideRows$startFromColumn", $rendNo);
+            if (isset($this->config['auto_numbering'])) {
+                $this->sheet->setCellValue("$columnInsideRows$startFromColumn", $autoNumbering);
                 $columnInsideRows = 'B';
             }
 
@@ -100,12 +101,13 @@ class PhpSpreadsheetExcelService
             }
 
             $startFromColumn++;
-            $rendNo++;
+            $autoNumbering++;
         }
 
-        if (isset($this->config['set_borders']) && $this->config['set_borders'] == true) {
+        // Worksheet Settings
+        if (isset($this->config['borders']) && $this->config['borders'] == true) {
             $this->sheet->getStyle(str_ireplace('A1', 'A3', $this->sheet->calculateWorksheetDimension()))->getBorders()->applyFromArray([
-            'allBorders' => [
+                'allBorders' => [
                     'borderStyle' => \PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN
                 ]
             ]);
