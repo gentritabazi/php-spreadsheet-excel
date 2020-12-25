@@ -57,3 +57,8 @@ $spreadsheetExcel->save('file.xlsx');
 Output:
 
 ![...](screenshots/example-02.png)
+
+### Available Functions
+* stream.
+* streamAsCsv.
+* save.
