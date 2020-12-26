@@ -1,6 +1,7 @@
 ### Introduction
 
 **PhpSpreadsheetExcel** is a package thats offers you to build Excel fast and easy in PHP.
+This package depends on [PHPOffice/PhpSpreadsheet](https://github.com/PHPOffice/PhpSpreadsheet).
 
 ### Installation
 * composer require **gentritabazi01/phpspreadsheetexcel**.
