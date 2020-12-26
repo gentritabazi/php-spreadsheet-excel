@@ -11,5 +11,6 @@ $rows = [
 ];
 $config = [];
 
-$spreadsheetExcel = new PhpSpreadsheetExcelService($columns, $rows, $config);
+$spreadsheetExcel = new PhpSpreadsheetExcelService();
+$spreadsheetExcel->createSheet('My Sheet', $columns, $rows, $config);
 $spreadsheetExcel->save('file.xlsx');

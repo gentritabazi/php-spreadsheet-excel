@@ -21,7 +21,8 @@ $rows = [
 ];
 $config = [];
 
-$spreadsheetExcel = new PhpSpreadsheetExcelService($columns, $rows, $config);
+$spreadsheetExcel = new PhpSpreadsheetExcelService();
+$spreadsheetExcel->createSheet('Sheet 1', $columns, $rows, $config);
 $spreadsheetExcel->save('file.xlsx');
 ```
 
@@ -50,7 +51,8 @@ $config = [
     'borders' => true
 ];
 
-$spreadsheetExcel = new PhpSpreadsheetExcelService($columns, $rows, $config);
+$spreadsheetExcel = new PhpSpreadsheetExcelService();
+$spreadsheetExcel->createSheet('Sheet 1', $columns, $rows, $config);
 $spreadsheetExcel->save('file.xlsx');
 ```
 
