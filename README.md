@@ -67,3 +67,5 @@ Output:
 * streamAsCsv.
 * save.
 * createSheet.
+* download($fileName | 'file.xlsx').
+* downloadAsCsv($fileName | 'file.csv').
