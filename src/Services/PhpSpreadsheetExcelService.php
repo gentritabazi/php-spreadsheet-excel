@@ -188,6 +188,38 @@ class PhpSpreadsheetExcelService
         return true;
     }
 
+    public function download($fileName = 'file.xlsx')
+    {
+        $writer = new XlsxWriter($this->spreadsheet);
+
+        $headers = [
+            'Content-Type' => 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+            'Content-Disposition' => 'attachment; filename="'. $fileName.'"'
+        ];
+        
+        foreach ($headers as $key => $value) {
+            header($key. ': '. $value);
+        }
+
+        $writer->save('php://output');
+    }
+
+    public function downloadAsCsv($fileName = 'file.csv')
+    {
+        $writer = new XlsxWriter($this->spreadsheet);
+
+        $headers = [
+            'Content-Type' => 'text/csv',
+            'Content-Disposition' => 'attachment; filename="'. $fileName.'"'
+        ];
+        
+        foreach ($headers as $key => $value) {
+            header($key. ': '. $value);
+        }
+
+        $writer->save('php://output');
+    }
+
     private function convertNumberToLetter($number)
     {
         $startFrom = 'A';
