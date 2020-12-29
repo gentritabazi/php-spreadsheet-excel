@@ -90,7 +90,7 @@ class TestController extends Controller
 
 Output:
 
-![...](screenshots/example-04.png)
+![...](screenshots/example-03.png)
 
 [Example 3](src/Examples/example-04.php):
 
