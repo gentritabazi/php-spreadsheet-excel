@@ -81,15 +81,26 @@ class PhpSpreadsheetExcelService
         $startFromColumnIndex += 1;
         $autoNumbering = 1;
         foreach ($rows as $row) {
-            $columnInsideRows = 'A';
+            $startFromColumn = 'A';
             if (isset($config['auto_numbering'])) {
-                $activeSheet->setCellValue("$columnInsideRows$startFromColumnIndex", $autoNumbering);
-                $columnInsideRows = 'B';
+                $activeSheet->setCellValue("$startFromColumn$startFromColumnIndex", $autoNumbering);
+                $startFromColumn = 'B';
             }
 
-            foreach ($row as $val) {
-                $activeSheet->setCellValue("$columnInsideRows$startFromColumnIndex", $val);
-                $columnInsideRows++;
+            foreach ($row as $rowIndex) {
+                $rowValue = $rowIndex;
+                $rowStyle = null;
+                
+                if (is_array($rowIndex)) {
+                    $rowValue = $rowIndex['value'];
+                    $rowStyle = $rowIndex['style'] ?? null;
+                }
+
+                $activeSheet->setCellValue("$startFromColumn$startFromColumnIndex", $rowValue);
+
+                ($rowStyle) ? $activeSheet->getStyle("$startFromColumn$startFromColumnIndex")->applyFromArray($rowStyle) : null;
+
+                $startFromColumn++;
             }
 
             $startFromColumnIndex++;
