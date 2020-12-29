@@ -92,7 +92,7 @@ Output:
 
 ![...](screenshots/example-03.png)
 
-[Example 3](src/Examples/example-04.php):
+[Example 4](src/Examples/example-04.php):
 
 ```php
 <?php
