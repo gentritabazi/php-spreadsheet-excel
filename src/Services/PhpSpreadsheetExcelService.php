@@ -20,80 +20,90 @@ class PhpSpreadsheetExcelService
 
     public function build($activeSheet, $columns, $rows, $config)
     {
-        $startFromColumn = 1;
+        $startFromColumn = 'A';
+        $startFromColumnIndex = 1;
 
         // Title
         if (isset($config['title'])) {
             $activeSheet->setCellValue('A1', $config['title'])->getStyle('A1')->getFont()->setBold(true);
             $activeSheet->getStyle('A1')->getAlignment()->setHorizontal(Alignment::HORIZONTAL_CENTER);
             $activeSheet->mergeCells('A1:'. $this->convertNumberToLetter(count($columns) + 1). '1');
-            $startFromColumn += 2;
+            $startFromColumnIndex += 2;
         }
 
         // Auto Numbering
         if (isset($config['auto_numbering']) && $config['auto_numbering'] == true) {
-            $activeSheet->setCellValue('A'. $startFromColumn, 'No.');
+            $activeSheet->setCellValue('A'. $startFromColumnIndex, 'No.');
 
             // Style Columns
             if (isset($config['columns_style'])) {
-                $activeSheet->getStyle('A'. $startFromColumn)->applyFromArray($config['column_style']);
+                $activeSheet->getStyle('A'. $startFromColumnIndex)->applyFromArray($config['column_style']);
             }
 
-            $columnInsideColumns = 'B';
-        } else {
-            $columnInsideColumns = 'A';
+            $startFromColumn++;
         }
 
         // Columns
         for ($i = 0; $i < count($columns); $i++) {
             // Column Value
             if (is_array($columns[$i])) {
-                $activeSheet->setCellValue($columnInsideColumns. $startFromColumn, $columns[$i]['value']);
+                $activeSheet->setCellValue($startFromColumn. $startFromColumnIndex, $columns[$i]['value']);
             } else {
-                $activeSheet->setCellValue($columnInsideColumns. $startFromColumn, $columns[$i]);
+                $activeSheet->setCellValue($startFromColumn. $startFromColumnIndex, $columns[$i]);
             }
 
             // Style Columns
             if (isset($config['columns_style'])) {
-                $activeSheet->getStyle($columnInsideColumns. $startFromColumn)->applyFromArray($config['column_style']);
+                $activeSheet->getStyle($startFromColumn. $startFromColumnIndex)->applyFromArray($config['column_style']);
             }
 
             // Autosize Columns
             if (isset($config['columns_autosize']) && !is_array($columns[$i])) {
-                $activeSheet->getColumnDimension($columnInsideColumns)->setAutoSize(true);
+                $activeSheet->getColumnDimension($startFromColumn)->setAutoSize(true);
             }
 
             // Column Settings
             if (is_array($columns[$i])) {
                 if (isset($columns[$i]['width'])) {
-                    $activeSheet->getColumnDimension($columnInsideColumns)->setWidth($columns[$i]['width']);
+                    $activeSheet->getColumnDimension($startFromColumn)->setWidth($columns[$i]['width']);
                 }
             }
 
-            $columnInsideColumns++;
+            $startFromColumn++;
         }
 
         // Auto Filter Columns
         if (isset($config['columns_auto_filter']) && $config['columns_auto_filter']) {
-            $activeSheet->setAutoFilter('A'. $startFromColumn. ':'. $this->convertNumberToLetter(count($columns) + 1). $startFromColumn);
+            $activeSheet->setAutoFilter('A'. $startFromColumnIndex. ':'. $this->convertNumberToLetter(count($columns) + 1). $startFromColumnIndex);
         }
 
         // Rows
-        $startFromColumn += 1;
+        $startFromColumnIndex += 1;
         $autoNumbering = 1;
         foreach ($rows as $row) {
-            $columnInsideRows = 'A';
+            $startFromColumn = 'A';
             if (isset($config['auto_numbering'])) {
-                $activeSheet->setCellValue("$columnInsideRows$startFromColumn", $autoNumbering);
-                $columnInsideRows = 'B';
+                $activeSheet->setCellValue("$startFromColumn$startFromColumnIndex", $autoNumbering);
+                $startFromColumn = 'B';
             }
 
-            foreach ($row as $val) {
-                $activeSheet->setCellValue("$columnInsideRows$startFromColumn", $val);
-                $columnInsideRows++;
+            foreach ($row as $rowIndex) {
+                $rowValue = $rowIndex;
+                $rowStyle = null;
+                
+                if (is_array($rowIndex)) {
+                    $rowValue = $rowIndex['value'];
+                    $rowStyle = $rowIndex['style'] ?? null;
+                }
+
+                $activeSheet->setCellValue("$startFromColumn$startFromColumnIndex", $rowValue);
+
+                ($rowStyle) ? $activeSheet->getStyle("$startFromColumn$startFromColumnIndex")->applyFromArray($rowStyle) : null;
+
+                $startFromColumn++;
             }
 
-            $startFromColumn++;
+            $startFromColumnIndex++;
             $autoNumbering++;
         }
 
